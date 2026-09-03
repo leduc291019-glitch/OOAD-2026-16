@@ -1,0 +1,20 @@
+Đề tài: Phân tích yêu cầu hệ thống Quản lý Bán hàng , kho cho Cửa hàng Bán lẻ
+Khảo sát hiện trạng tổ chức & Tin học
+Cơ cấu tổ chức: Sơ đồ phòng ban (Ban quản lý, Nhân viên bán hàng, Thủ kho, Kế toán).
+Hiện trạng tin học: Cấu hình máy tính tại thu ngân/kho, hệ điều hành, kết nối mạng và trình độ tin học của nhân viên.
+Khảo sát & Đánh giá hiện trạng nghiệp vụ
+Quy trình nghiệp vụ: Mô tả quy trình nhập hàng, bán hàng, kiểm kê kho và lập báo cáo doanh thu.
+Tần suất & Khó khăn: Xác định các điểm nghẽn (ví dụ: thất thoát hàng hóa, tính toán thủ công chậm trễ, sai lệch sổ sách).
+Áp dụng kỹ thuật thu thập yêu cầu
+Phỏng vấn: Soạn kịch bản phỏng vấn có định hướng dành cho Quản lý và Thủ kho.
+Bảng câu hỏi: Thiết kế mẫu khảo sát ý kiến nhân viên bán hàng về thao tác thanh toán.
+Nghiên cứu tài liệu: Thu thập mẫu hóa đơn, phiếu nhập/xấp kho, báo cáo doanh thu hiện có.
+Quan sát thực tế: Ghi nhận thực tế quy trình thanh toán giờ cao điểm.
+Phân loại và Xây dựng danh sách yêu cầu
+Yêu cầu chức năng:
+Lưu trữ: Thông tin sản phẩm, khách hàng, nhà cung cấp, hóa đơn.
+Tra cứu: Tìm kiếm hàng tồn kho, lịch sử mua hàng.
+Tính toán: Tổng tiền, chiết khấu, thuế, doanh thu theo ngày/tháng.
+Kết xuất: In hóa đơn thanh toán, xuất file báo cáo doanh thu/tồn kho.
+Yêu cầu phi chức năng: Độ bảo mật thông tin, thời gian phản hồi hệ thống, giao diện dễ sử dụng.
+
