@@ -1,3 +1,4 @@
+[message.txt](https://github.com/user-attachments/files/34588641/message.txt)
 # BÁO CÁO PHÂN TÍCH VÀ THIẾT KẾ HƯỚNG ĐỐI TƯỢNG (OOAD)
 ## ĐỀ TÀI: HỆ THỐNG QUẢN LÝ BÁN HÀNG AFFILIATE (AFILISHOP) - OOAD-2026-16
 
@@ -98,4 +99,63 @@ Sơ đồ tổng quát gồm các hộp 1 ngăn chứa Tên Lớp và bản số
 ---
 
 ## IV. SƠ ĐỒ HOẠT ĐỘNG (ACTIVITY DIAGRAM)
-... (Còn60 dòng dòng)
+
+* **Quá trình xử lý được biểu diễn:** Quá trình Khách hàng (Customer) truy cập qua Affiliate Link, đặt hàng và Merchant duyệt đơn hàng để ghi nhận hoa hồng cho Affiliate.
+* **Các phân vùng (Swimlanes):** `Customer (Khách mua hàng)` | `Hệ thống AffiliShop` | `Merchant (Nhà bán hàng)`.
+* **Diễn giải luồng hoạt động:**
+  1. **Start (Tròn đen)** tại cột `Customer`: Khách hàng bấm vào đường dẫn Affiliate Link.
+  2. Tại cột `Hệ thống AffiliShop`: Hệ thống thực hiện hành động *Ghi nhận lượt click vào Affiliate Link* và *Lưu mã Affiliate vào phiên (Cookie/Session)*, sau đó *Hiển thị thông tin sản phẩm*.
+  3. Tại cột `Customer`: Khách hàng *Chọn số lượng và tiến hành Đặt hàng*.
+  4. Tại cột `Hệ thống AffiliShop`: Hệ thống *Tạo đơn hàng mới gắn mã Affiliate* và *Gửi thông báo yêu cầu duyệt đơn cho Merchant*.
+  5. Tại cột `Merchant`: Nhà bán hàng *Kiểm tra thông tin đơn hàng và xác thực giao dịch*.
+  6. Nút rẽ nhánh điều kiện (Hình thoi) `[Đơn hàng hợp lệ và giao thành công?]`:
+     * **Nhánh [Hợp lệ]:** Merchant *Xác nhận duyệt đơn hàng* $\rightarrow$ `Hệ thống AffiliShop` *Cộng tiền hoa hồng vào số dư của Affiliate* $\rightarrow$ **End (Tròn đen có viền tròn ngoài)**.
+     * **Nhánh [Không hợp lệ / Bị hủy]:** Merchant *Từ chối duyệt đơn* $\rightarrow$ `Hệ thống AffiliShop` *Cập nhật trạng thái hủy hoa hồng* $\rightarrow$ **End (Tròn đen có viền tròn ngoài)**.
+
+![Sơ đồ Hoạt động]
+<img width="694" height="824" alt="c683b5c4-126e-41d9-95fb-5ea8e02981d2" src="https://github.com/user-attachments/assets/f6ebc702-dedd-495a-b35b-ea2dc7278148" />
+
+
+---
+
+## V. SƠ ĐỒ TUẦN TỰ (SEQUENCE DIAGRAM)
+
+* **Quá trình xử lý được biểu diễn:** Quá trình Khách hàng đặt hàng qua Affiliate Link và kích hoạt duyệt đơn hàng Affiliate.
+* **Các đối tượng tham gia (Định dạng chuẩn `tên đối tượng : TênLớp` trên đỉnh Lifeline):**
+  * `khachHang : Customer`
+  * `linkTiepThi : AffiliateLink`
+  * `sanPham : SanPham`
+  * `donHang : DonHang`
+  * `chuShop : Merchant`
+* **Diễn giải trình tự thông điệp:**
+  1. `khachHang : Customer` $\rightarrow$ `linkTiepThi : AffiliateLink` : `1: truyCapLink(urlGioiThieu)`
+  2. `linkTiepThi : AffiliateLink` $\rightarrow$ `linkTiepThi : AffiliateLink` (Self-call) : `2: ghiNhanClick()`
+  3. `linkTiepThi : AffiliateLink` $\rightarrow$ `sanPham : SanPham` : `3: layThongTinSanPham(maSP)`
+  4. `sanPham : SanPham` $\dashrightarrow$ `khachHang : Customer` : `4: hienThiChiTietSanPham()`
+  5. `khachHang : Customer` $\rightarrow$ `donHang : DonHang` : `5: taoDonHang(maSP, soLuong, maLink)`
+  6. `donHang : DonHang` $\rightarrow$ `donHang : DonHang` (Self-call) : `6: tinhHoaHongAffiliate()`
+  7. `donHang : DonHang` $\rightarrow$ `chuShop : Merchant` : `7: guiYeuCauDuyetDon(maDonHang)`
+  8. `chuShop : Merchant` $\rightarrow$ `donHang : DonHang` : `8: xacNhanDuyetDon(maDonHang)`
+  9. `donHang : DonHang` $\dashrightarrow$ `khachHang : Customer` : `9: thongBaoDatHangThanhCong()`
+
+![Sơ đồ Tuần tự]
+<img width="1013" height="725" alt="40ecf535-ba68-4933-a985-e1e8b4862739" src="https://github.com/user-attachments/assets/d38c77ad-0a31-4f1e-ac8e-cebba4a2f187" />
+
+
+---
+
+## VI. SƠ ĐỒ TRẠNG THÁI (STATE DIAGRAM)
+
+* **Đối tượng được biểu diễn:** Đối tượng **Đơn hàng Affiliate (`DonHang`)**.
+* **Diễn giải vòng đời trạng thái của đối tượng `DonHang`:**
+  1. **Start (Tròn đen)** $\xrightarrow{\text{Khách hoàn tất đặt hàng qua Affiliate Link}}$ Trạng thái **`Mới tạo (Chờ duyệt)`**.
+  2. Từ **`Mới tạo (Chờ duyệt)`**:
+     * $\xrightarrow{\text{Merchant xác nhận đơn hợp lệ}}$ chuyển sang trạng thái **`Đã duyệt (Đang giao hàng)`**.
+     * $\xrightarrow{\text{Khách hủy đơn / Merchant từ chối}}$ chuyển sang trạng thái **`Đã hủy`**.
+  3. Từ **`Đã duyệt (Đang giao hàng)`**:
+     * $\xrightarrow{\text{Khách nhận hàng & thanh toán thành công}}$ chuyển sang trạng thái **`Hoàn tất đơn hàng`**.
+     * $\xrightarrow{\text{Giao thất bại / Khách trả hàng}}$ chuyển sang trạng thái **`Đã hủy`**.
+  4. Từ **`Hoàn tất đơn hàng`** $\xrightarrow{\text{Hệ thống quyết toán chiết khấu cho Affiliate}}$ chuyển sang trạng thái **`Đã chi trả hoa hồng`**.
+  5. Từ **`Đã chi trả hoa hồng`** và **`Đã hủy`** $\rightarrow$ **End (Tròn đen có viền tròn ngoài)**.
+
+![Sơ đồ Trạng thái](./images/state_diagram.png)
